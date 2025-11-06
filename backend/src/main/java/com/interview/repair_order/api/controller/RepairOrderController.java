@@ -1,5 +1,6 @@
 package com.interview.repair_order.api.controller;
 
+import com.interview.repair_order.api.model.RepairOrderResponse;
 import com.interview.repair_order.domain.RepairOrder;
 import com.interview.repair_order.service.RepairOrderService;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,7 @@ public class RepairOrderController {
 
     @GetMapping
     //make dto
-    public List<RepairOrder> getAll() {
+    public List<RepairOrderResponse> getAll() {
         return repairOrderService.getAll();
     }
 }
