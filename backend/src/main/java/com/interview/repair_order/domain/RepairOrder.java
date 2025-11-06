@@ -42,7 +42,7 @@ public class RepairOrder {
 
     private String notes;
 
-    @OneToMany(mappedBy = "repairOrder", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "repairOrder", fetch = FetchType.LAZY)
     private List<RepairOrderLine> repairOrderLines = new ArrayList<>();
 
     public BigDecimal getTotalAmount() {

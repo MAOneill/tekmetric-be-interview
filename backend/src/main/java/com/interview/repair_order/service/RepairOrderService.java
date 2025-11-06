@@ -17,7 +17,8 @@ public class RepairOrderService {
 
     //make a dto
     public List<RepairOrderResponse> getAll() {
-        return repairOrderRepository.findAll().stream().map(RepairOrderResponse::new)
+
+        return repairOrderRepository.findAllWithLines().stream().map(RepairOrderResponse::new)
                 .collect(Collectors.toList());
         //PAGINATE THIS
     }
