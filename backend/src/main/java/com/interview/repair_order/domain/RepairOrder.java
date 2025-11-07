@@ -1,11 +1,15 @@
 package com.interview.repair_order.domain;
 
+import com.interview._infrastructure.config.domain.AuditedFields;
+import com.interview.repair_order.api.model.RepairOrderRequest;
 import com.interview.repair_order_line.domain.RepairOrderLine;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.envers.Audited;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -18,7 +22,9 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class RepairOrder {
+@EntityListeners(AuditingEntityListener.class)
+@Audited
+public class RepairOrder extends AuditedFields {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -34,7 +40,9 @@ public class RepairOrder {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    private Instant createdAt;
+    @CreatedDate
+    @Column(name = "created_date")
+    private Instant createdDate;
 
     private Integer odometerIn;
 
@@ -50,4 +58,14 @@ public class RepairOrder {
                 .map(RepairOrderLine::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    public RepairOrder(RepairOrderRequest request) {
+        this.shopId = request.getShopId();
+        this.externalRO = request.getExternalRO();
+        this.status = request.getStatus();
+        this.odometerIn = request.getOdometerIn();
+        this.odometerOut = request.getOdometerOut();
+        this.notes = request.getNotes();
+    }
+
+    //add equals and hash
 }

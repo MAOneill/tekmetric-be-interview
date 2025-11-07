@@ -2,10 +2,12 @@ package com.interview.repair_order.api.model;
 
 import com.interview.repair_order.domain.RepairOrder;
 import com.interview.repair_order.domain.Status;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 
+@Getter
 public class RepairOrderResponse {
 
     public String id ;
@@ -31,7 +33,7 @@ public class RepairOrderResponse {
         this.shopId = repairOrder.getShopId();
         this.externalRO = repairOrder.getExternalRO();
         this.status = repairOrder.getStatus();
-        this.createdAt = repairOrder.getCreatedAt();
+        this.createdAt = repairOrder.getCreatedDate();
         this.odometerIn = repairOrder.getOdometerIn();
         this.odometerOut = repairOrder.getOdometerOut();
         this.notes = repairOrder.getNotes();
