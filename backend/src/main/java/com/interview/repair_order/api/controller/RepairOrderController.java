@@ -1,7 +1,6 @@
 package com.interview.repair_order.api.controller;
 
-import com.interview._infrastructure.exceptions.BadRequestException;
-import com.interview._infrastructure.exceptions.NotFoundException;
+import com.interview._infrastructure.exceptions.CustomError;
 import com.interview.repair_order.api.model.RepairOrderRequest;
 import com.interview.repair_order.api.model.RepairOrderResponse;
 import com.interview.repair_order.service.RepairOrderService;
@@ -35,14 +34,16 @@ public class RepairOrderController {
     @Operation(summary = "Create a new Repair order", description = "Creates a new repair order")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created"),
-            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = BadRequestException.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request",
+                    content = @Content(schema = @Schema(implementation = CustomError.class))),
     })
     @PostMapping(BASE_V0)
     public ResponseEntity<RepairOrderResponse> create(@Valid @RequestBody RepairOrderRequest request) {
 
         RepairOrderResponse response = repairOrderService.createRepairOrder(request);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path(BASE_V0 + "/{id}").buildAndExpand(response.getId()).toUri();
+        URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path(BASE_V0 + "/{id}")
+                .buildAndExpand(response.getId()).toUri();
 
         return ResponseEntity.created(location).body(response);
     }
@@ -57,7 +58,8 @@ public class RepairOrderController {
     @Operation(summary = "Find a repair order by ID", description = "Returns details for a single repair order ")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
-            @ApiResponse(responseCode = "404", description = "Repair Order not found", content = @Content(schema = @Schema(implementation = NotFoundException.class)))})
+            @ApiResponse(responseCode = "404", description = "Repair Order not found",
+                    content = @Content(schema = @Schema(implementation = CustomError.class)))})
     @GetMapping(BASE_V0 + "/{id}")
     public RepairOrderResponse getRepairOrder(
             @Parameter(description = "ID of the repair order. Cannot be empty.", required = true) @PathVariable String id) {
@@ -67,21 +69,24 @@ public class RepairOrderController {
     @Operation(summary = "Update a Repair Order", description = "Updates a repair order")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
-            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = BadRequestException.class))),
-            @ApiResponse(responseCode = "404", description = "Repair Order not found", content = @Content(schema = @Schema(implementation = NotFoundException.class)))})
+            @ApiResponse(responseCode = "400", description = "Bad Request",
+                    content = @Content(schema = @Schema(implementation = CustomError.class))),
+            @ApiResponse(responseCode = "404", description = "Repair Order not found",
+                    content = @Content(schema = @Schema(implementation = CustomError.class)))})
 
     @PutMapping(BASE_V0 + "/{id}")
     public RepairOrderResponse updateRepairOrder(
             @Parameter(description = "ID of the repair order. Cannot be empty.", required = true) @PathVariable String id,
-            @Parameter(description = "Requested values for Repair Order", required = true) @Valid @RequestBody RepairOrderRequest repairOrderRequest) {
+            @Parameter(description = "Requested values for Repair Order", required = true)
+            @Valid @RequestBody RepairOrderRequest repairOrderRequest) {
         return repairOrderService.updateRepairOrder(id, repairOrderRequest);
     }
-
 
     @Operation(summary = "Delete a Repair Order", description = "Deletes a repair order")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "No Content"),
-            @ApiResponse(responseCode = "404", description = "Repair Order not found", content = @Content(schema = @Schema(implementation = NotFoundException.class)))})
+            @ApiResponse(responseCode = "404", description = "Repair Order not found",
+                    content = @Content(schema = @Schema(implementation = CustomError.class)))})
     @DeleteMapping(BASE_V0 + "/{id}")
     public ResponseEntity<Void> updateRepairOrder(
             @Parameter(description = "ID of the repair order. Cannot be empty.", required = true) @PathVariable String id) {

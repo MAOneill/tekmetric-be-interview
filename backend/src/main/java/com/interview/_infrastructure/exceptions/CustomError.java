@@ -16,25 +16,11 @@ public class CustomError {
     private String message;
     private String path;
 
-    public CustomError(String message, HttpStatus error) {
-        this.status = error.value();
-        this.error = error.getReasonPhrase();
-        this.message = message;
-        this.timeStamp = Instant.now().toString();
-    }
-
     public CustomError(String message, HttpStatus error, String path) {
         this.status = error.value();
         this.error = error.getReasonPhrase();
         this.message = message;
         this.timeStamp = Instant.now().toString();
         this.path = path;
-    }
-
-    public CustomError(Exception exception, HttpStatus error) {
-        this.status = error.value();
-        this.error = error.getReasonPhrase();
-        this.message = exception.getMessage();
-        this.timeStamp = Instant.now().toString();
     }
 }

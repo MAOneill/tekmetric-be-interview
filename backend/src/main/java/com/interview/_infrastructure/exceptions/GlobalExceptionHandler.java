@@ -21,7 +21,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      * @param headers - HttpHeaders
      * @param status - HttpStatus
      * @param request - HttpRequest
-     * @return - ResponseEntity with a CustomError attached.
+     * @return - ResponseEntity with a Bad attached.
      */
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
