@@ -12,6 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Objects;
 
 @Entity
 @Table(name = "repair_order_lines")
@@ -41,5 +42,23 @@ public class RepairOrderLine  extends AuditedFields  {
     //round to 2 decimal places at the lowest line level to avoid rounding differences when summing
     public BigDecimal getAmount() {
         return quantity.multiply(unitPrice).setScale(2, RoundingMode.HALF_UP);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof RepairOrderLine)) {
+            return false;
+        }
+        RepairOrderLine repairOrderLine = (RepairOrderLine) o;
+
+        return this.id != null && this.id.equals(repairOrderLine.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id != null ? Objects.hash(this.id) : 0;
     }
 }

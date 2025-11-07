@@ -32,5 +32,4 @@ public class RepairOrderRequest {
     public Integer odometerOut;
 
     public String notes;
-
 }

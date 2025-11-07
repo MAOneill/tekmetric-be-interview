@@ -1,5 +1,7 @@
 package com.interview.repair_order.service;
 
+import com.interview._infrastructure.exceptions.BadRequestException;
+import com.interview._infrastructure.exceptions.NotFoundException;
 import com.interview.repair_order.api.model.RepairOrderRequest;
 import com.interview.repair_order.api.model.RepairOrderResponse;
 import com.interview.repair_order.domain.RepairOrder;
@@ -15,6 +17,7 @@ import javax.transaction.Transactional;
 @AllArgsConstructor
 public class RepairOrderService {
 
+    private static final String NOT_FOUND = "A repair order with ID: %s cannot be found.";
     private RepairOrderRepository repairOrderRepository;
 
 //    public List<RepairOrderResponse> getAll() {
@@ -29,6 +32,13 @@ public class RepairOrderService {
         return repairOrderRepository.findAllWithLinesPageable(pageable).map(RepairOrderResponse::new);
     }
 
+    public RepairOrderResponse getRepairOrder(String id) {
+        RepairOrder repairOrder = repairOrderRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND, id)));
+
+        return new RepairOrderResponse(repairOrder);
+    }
+
     @Transactional
     public RepairOrderResponse createRepairOrder(RepairOrderRequest request) {
 
@@ -38,5 +48,35 @@ public class RepairOrderService {
         newRepairOrder = repairOrderRepository.save(newRepairOrder);
 
         return new RepairOrderResponse(newRepairOrder);
+    }
+
+    @Transactional
+    public RepairOrderResponse updateRepairOrder(String id, RepairOrderRequest repairOrderRequest) {
+        RepairOrder repairOrder = repairOrderRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND, id)));
+
+        //this could be a custom validator
+        if (repairOrderRequest.getOdometerIn() != null &&
+                repairOrderRequest.getOdometerOut() != null &&
+                repairOrderRequest.getOdometerIn() > repairOrderRequest.getOdometerOut()) {
+            throw new BadRequestException("Odometer In cannot be greater than Odometer Out.");
+        }
+
+        repairOrder.setShopId(repairOrderRequest.getShopId());
+        repairOrder.setExternalRO(repairOrderRequest.getExternalRO());
+        repairOrder.setStatus(repairOrderRequest.getStatus());
+        repairOrder.setOdometerIn(repairOrderRequest.getOdometerIn());
+        repairOrder.setOdometerOut(repairOrderRequest.getOdometerOut());
+        repairOrder.setNotes(repairOrderRequest.getNotes());
+
+        return new RepairOrderResponse(repairOrder);
+    }
+
+    @Transactional
+    public void deleteRepairOrder(String id) {
+        RepairOrder repairOrder = repairOrderRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND, id)));
+
+        repairOrderRepository.delete(repairOrder);
     }
 }

@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "repair_orders")
@@ -67,5 +68,21 @@ public class RepairOrder extends AuditedFields {
         this.notes = request.getNotes();
     }
 
-    //add equals and hash
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof RepairOrder)) {
+            return false;
+        }
+        RepairOrder repairOrder = (RepairOrder) o;
+
+        return this.id != null && this.id.equals(repairOrder.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id != null ? Objects.hash(this.id) : 0;
+    }
 }
