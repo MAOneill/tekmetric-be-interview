@@ -5,7 +5,7 @@ CREATE TABLE revisions (
         time_stamp      TIMESTAMP DEFAULT NULL
         );
 
-create table repair_orders (
+CREATE TABLE repair_orders (
             id              VARCHAR(36) PRIMARY KEY NOT NULL,
             shop_id         VARCHAR(36) NOT NULL,
             external_RO     VARCHAR(50) NOT NULL,
@@ -18,7 +18,7 @@ create table repair_orders (
             modified_at     TIMESTAMP NOT NULL
             );
 
-create table audit_repair_orders (
+CREATE TABLE audit_repair_orders (
             id              VARCHAR(36)  NOT NULL,
             revision_id     INT NOT NULL,
             revision_type_id          TINYINT,
@@ -35,7 +35,7 @@ create table audit_repair_orders (
             CONSTRAINT fk_repair_order_revisions FOREIGN KEY (revision_id) REFERENCES revisions(id)
             );
 
-create table repair_order_lines (
+CREATE TABLE repair_order_lines (
             id              VARCHAR(36) PRIMARY KEY NOT NULL,
             repair_order_id VARCHAR(36) NOT NULL,
             description     VARCHAR(255) NOT NULL,
@@ -46,7 +46,7 @@ create table repair_order_lines (
             CONSTRAINT fk_repair_order FOREIGN KEY (repair_order_id) REFERENCES repair_orders(id)
             );
 
-create table audit_repair_order_lines (
+CREATE TABLE audit_repair_order_lines (
             id              VARCHAR(36) NOT NULL,
             revision_id     INT NOT NULL,
             revision_type_id          TINYINT,

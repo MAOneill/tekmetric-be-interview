@@ -28,9 +28,7 @@ public class RepairOrderService {
     }
 
     public RepairOrderResponse getRepairOrder(String id) {
-        RepairOrder repairOrder = repairOrderRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND, id)));
-
+        RepairOrder repairOrder = getRepairOrderFromRepo(id);
         return new RepairOrderResponse(repairOrder);
     }
 
@@ -47,8 +45,7 @@ public class RepairOrderService {
 
     @Transactional
     public RepairOrderResponse updateRepairOrder(String id, RepairOrderRequest repairOrderRequest) {
-        RepairOrder repairOrder = repairOrderRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND, id)));
+        RepairOrder repairOrder = getRepairOrderFromRepo(id);
 
         //this could be a custom validator
         if (repairOrderRequest.getOdometerIn() != null &&
@@ -69,10 +66,14 @@ public class RepairOrderService {
 
     @Transactional
     public void deleteRepairOrder(String id) {
-        RepairOrder repairOrder = repairOrderRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND, id)));
+        RepairOrder repairOrder = getRepairOrderFromRepo(id);
 
         repairOrderLineRepository.deleteAll(repairOrder.getRepairOrderLines());
         repairOrderRepository.delete(repairOrder);
+    }
+
+    private RepairOrder getRepairOrderFromRepo(String id) {
+        return repairOrderRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND, id)));
     }
 }

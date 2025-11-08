@@ -9,7 +9,6 @@ import org.hibernate.envers.RevisionTimestamp;
 import javax.persistence.*;
 import java.util.Date;
 
-
 @Entity
 @Table(name = "revisions")
 @Getter
@@ -25,7 +24,7 @@ public class Revision {
     @SequenceGenerator(
             name = "rev_seq",
             sequenceName = "revisions_seq",
-            allocationSize = 1   // important so Hibernate doesn't cache ahead incorrectly
+            allocationSize = 1
     )
     private Integer id;
 

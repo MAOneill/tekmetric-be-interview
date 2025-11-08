@@ -17,7 +17,6 @@ import static com.interview._infrastructure.security.ApiKeyAuthFilter.AUTHENTICA
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] PERMITTED_PATHS = {
-//            "/api/v0/**",
             "/actuator/health",
             "/h2-console/**",
             "/api/welcome",

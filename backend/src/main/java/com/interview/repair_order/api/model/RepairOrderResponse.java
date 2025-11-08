@@ -28,6 +28,7 @@ public class RepairOrderResponse {
 
     public BigDecimal amount;
 
+    //consider using a Mapper
     public RepairOrderResponse(RepairOrder repairOrder) {
         this.id = repairOrder.getId();
         this.shopId = repairOrder.getShopId();
