@@ -1,5 +1,6 @@
 package com.interview._infrastructure.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.interview._infrastructure.security.ApiKeyAuthFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${demo.api-key}") //use constructor instead
     private String apiKey;
 
+    private ObjectMapper objectMapper;
+
+    public SecurityConfig(@Value("${demo.api-key}") String apiKey,
+                          ObjectMapper objectMapper) {
+        this.apiKey = apiKey;
+        this.objectMapper = objectMapper;
+    }
+
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(
@@ -30,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        ApiKeyAuthFilter apiKeyFilter = new ApiKeyAuthFilter("X-AUTH-KEY", apiKey);
+        ApiKeyAuthFilter apiKeyFilter = new ApiKeyAuthFilter("X-AUTH-KEY", apiKey, objectMapper);
 
         http.csrf().disable()
             .sessionManagement()

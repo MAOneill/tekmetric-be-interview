@@ -24,7 +24,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      * @param headers - HttpHeaders
      * @param status  - HttpStatus
      * @param request - HttpRequest
-     * @return - ResponseEntity with a Bad attached.
+     * @return - ResponseEntity with a Custom Error attached.
      */
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -47,9 +47,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         }
         CustomError body = new CustomError(fieldErrors, HttpStatus.BAD_REQUEST, path);
 
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+        return handleExceptionInternal(ex, body, headers, HttpStatus.BAD_REQUEST, request);
     }
 
+    /**
+     * To add a custom response for Jackson Serialization errors - e.g., bad ENUM values
+     *
+     * @param ex      - MethodArgumentNotValidException
+     * @param headers - HttpHeaders
+     * @param status  - HttpStatus
+     * @param request - HttpRequest
+     * @return - ResponseEntity with a Custom Error attached.
+     */
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(
             HttpMessageNotReadableException ex,
@@ -59,7 +68,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         Throwable cause = ex.getCause();
 
-        // This is what Jackson throws on invalid enum values, wrong types, etc.
         if (cause instanceof com.fasterxml.jackson.databind.exc.InvalidFormatException) {
             com.fasterxml.jackson.databind.exc.InvalidFormatException ife =
                     (com.fasterxml.jackson.databind.exc.InvalidFormatException) cause;
@@ -79,7 +87,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                         java.util.Arrays.toString(allowed)
                 );
 
-                // Build your custom error body (adapt names to your ApiError class)
                 CustomError body = new CustomError(
                         message,
                         HttpStatus.BAD_REQUEST,

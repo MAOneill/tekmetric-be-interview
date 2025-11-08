@@ -2,6 +2,7 @@ package com.interview._infrastructure.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.interview._infrastructure.exceptions.CustomError;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,17 +17,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
 
+@AllArgsConstructor
 public class ApiKeyAuthFilter extends OncePerRequestFilter {
 
     private final String headerName;
     private final String expectedApiKey;
-    private final ObjectMapper objectMapper = new ObjectMapper(); // simple for demo
+    private final ObjectMapper objectMapper;
 
-
-    public ApiKeyAuthFilter(String headerName, String expectedApiKey) {
-        this.headerName = headerName;
-        this.expectedApiKey = expectedApiKey;
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -40,7 +37,6 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
             CustomError error = new CustomError("You do not have access to this resource!",
                     HttpStatus.UNAUTHORIZED,
                     request.getRequestURI());
-            // Reject immediately
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
@@ -51,8 +47,7 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
         }
         Authentication auth = new UsernamePasswordAuthenticationToken(
                 "api-key-user",
-                null
-        ,
+                null,
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
         );
 
