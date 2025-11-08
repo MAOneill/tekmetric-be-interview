@@ -23,6 +23,10 @@ import java.net.URI;
 
 @RestController
 @AllArgsConstructor
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "401", description = "Unauthorized",
+                content = @Content(schema = @Schema(implementation = CustomError.class))),
+})
 @RequestMapping()
 public class RepairOrderController {
 
@@ -35,7 +39,7 @@ public class RepairOrderController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created"),
             @ApiResponse(responseCode = "400", description = "Bad Request",
-                    content = @Content(schema = @Schema(implementation = CustomError.class))),
+                    content = @Content(schema = @Schema(implementation = CustomError.class)))
     })
     @PostMapping(BASE_V0)
     public ResponseEntity<RepairOrderResponse> create(@Valid @RequestBody RepairOrderRequest request) {
@@ -49,6 +53,8 @@ public class RepairOrderController {
     }
 
     @GetMapping(BASE_V0)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success")})
     public Page<RepairOrderResponse> getAll(@RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
 

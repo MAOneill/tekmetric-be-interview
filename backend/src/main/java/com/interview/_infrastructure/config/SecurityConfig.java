@@ -1,53 +1,46 @@
 package com.interview._infrastructure.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.interview._infrastructure.security.ApiKeyAuthFilter;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.interview._infrastructure.security.ApiKeyAuthFilter.AUTHENTICATED_PATH;
+
 @Configuration
 @EnableWebSecurity
+@AllArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("${demo.api-key}") //use constructor instead
-    private String apiKey;
+    private static final String[] PERMITTED_PATHS = {
+//            "/api/v0/**",
+            "/actuator/health",
+            "/h2-console/**",
+            "/api/welcome",
+            "/swagger-ui.html",
+            "/swagger-ui/**",
+            "/v3/api-docs/**"
+    };
+    private static final String AUTHENTICATED_PATH_MATCHER = AUTHENTICATED_PATH + "/**";
 
-    private ObjectMapper objectMapper;
-
-    public SecurityConfig(@Value("${demo.api-key}") String apiKey,
-                          ObjectMapper objectMapper) {
-        this.apiKey = apiKey;
-        this.objectMapper = objectMapper;
-    }
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers(
-                "/h2-console/**",
-                "/api/welcome",
-                "/swagger-ui.html",
-                "/swagger-ui/**",
-                "/v3/api-docs/**"
-        );
-    }
+    private final ApiKeyAuthFilter apiKeyAuthFilter;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        ApiKeyAuthFilter apiKeyFilter = new ApiKeyAuthFilter("X-AUTH-KEY", apiKey, objectMapper);
 
         http.csrf().disable()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
-            .addFilterBefore(apiKeyFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(apiKeyAuthFilter, UsernamePasswordAuthenticationFilter.class)
             .authorizeRequests()
-            .anyRequest().authenticated()
+                .antMatchers(PERMITTED_PATHS).permitAll()
+                .antMatchers(AUTHENTICATED_PATH_MATCHER).authenticated()
+                .anyRequest().denyAll()
             .and()
             .headers().frameOptions().sameOrigin();
     }
