@@ -3,6 +3,7 @@ package com.interview._infrastructure.exceptions;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -15,11 +16,13 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+
     /**
      * This is to change how the Validation error messages are returned
-     * @param ex - MethodArgumentNotValidException
+     *
+     * @param ex      - MethodArgumentNotValidException
      * @param headers - HttpHeaders
-     * @param status - HttpStatus
+     * @param status  - HttpStatus
      * @param request - HttpRequest
      * @return - ResponseEntity with a Bad attached.
      */
@@ -45,5 +48,54 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         CustomError body = new CustomError(fieldErrors, HttpStatus.BAD_REQUEST, path);
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(
+            HttpMessageNotReadableException ex,
+            HttpHeaders headers,
+            HttpStatus status,
+            WebRequest request) {
+
+        Throwable cause = ex.getCause();
+
+        // This is what Jackson throws on invalid enum values, wrong types, etc.
+        if (cause instanceof com.fasterxml.jackson.databind.exc.InvalidFormatException) {
+            com.fasterxml.jackson.databind.exc.InvalidFormatException ife =
+                    (com.fasterxml.jackson.databind.exc.InvalidFormatException) cause;
+
+            Class<?> targetType = ife.getTargetType();
+            if (targetType.isEnum()) {
+                Object[] allowed = targetType.getEnumConstants();
+
+                String fieldName = ife.getPath() != null && !ife.getPath().isEmpty()
+                        ? ife.getPath().get(0).getFieldName()
+                        : "unknown";
+
+                String message = String.format(
+                        "Invalid value '%s' for field '%s'. Allowed values are: %s",
+                        ife.getValue(),
+                        fieldName,
+                        java.util.Arrays.toString(allowed)
+                );
+
+                // Build your custom error body (adapt names to your ApiError class)
+                CustomError body = new CustomError(
+                        message,
+                        HttpStatus.BAD_REQUEST,
+                        ((ServletWebRequest) request).getRequest().getRequestURI()
+                );
+
+                return handleExceptionInternal(ex, body, headers, HttpStatus.BAD_REQUEST, request);
+            }
+        }
+        // Fallback for other parse errors
+        CustomError fallback = new CustomError(
+                "Malformed JSON request",
+                HttpStatus.BAD_REQUEST,
+                ((ServletWebRequest) request).getRequest().getRequestURI()
+        );
+
+        return handleExceptionInternal(ex, fallback, headers, HttpStatus.BAD_REQUEST, request);
     }
 }
