@@ -41,7 +41,7 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
 
         String apiKey = request.getHeader(X_AUTH_KEY_HEADER);
 
-        if (request.getServletPath().startsWith(AUTHENTICATED_PATH)) {
+        if (request.getRequestURI().equals(AUTHENTICATED_PATH) || request.getRequestURI().startsWith(AUTHENTICATED_PATH + "/")) {
 
             if (apiKey == null || !apiKey.equals(expectedApiKey)) {
                 CustomError error = new CustomError("You do not have access to this resource!",

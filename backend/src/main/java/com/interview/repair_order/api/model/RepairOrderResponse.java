@@ -3,11 +3,15 @@ package com.interview.repair_order.api.model;
 import com.interview.repair_order.domain.RepairOrder;
 import com.interview.repair_order.domain.Status;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 
 @Getter
+@Setter
+@NoArgsConstructor
 public class RepairOrderResponse {
 
     public String id ;

@@ -23,7 +23,7 @@ public class RepairOrderService {
     private RepairOrderLineRepository repairOrderLineRepository;
 
     public Page<RepairOrderResponse> getAllPaginated(Pageable pageable) {
-
+        //a custom PageResponse would be nicer here
         return repairOrderRepository.findAllWithLinesPageable(pageable).map(RepairOrderResponse::new);
     }
 
