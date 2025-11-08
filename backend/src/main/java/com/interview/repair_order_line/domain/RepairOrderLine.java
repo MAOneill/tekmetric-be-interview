@@ -41,6 +41,9 @@ public class RepairOrderLine  extends AuditedFields  {
 
     //round to 2 decimal places at the lowest line level to avoid rounding differences when summing
     public BigDecimal getAmount() {
+        if (quantity == null || unitPrice == null) {
+            return BigDecimal.ZERO;
+        }
         return quantity.multiply(unitPrice).setScale(2, RoundingMode.HALF_UP);
     }
 

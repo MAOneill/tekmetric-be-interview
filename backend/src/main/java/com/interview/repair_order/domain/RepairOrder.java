@@ -55,7 +55,7 @@ public class RepairOrder extends AuditedFields {
     private List<RepairOrderLine> repairOrderLines = new ArrayList<>();
 
     public BigDecimal getTotalAmount() {
-        return this.repairOrderLines.stream()
+        return getRepairOrderLines().stream()
                 .map(RepairOrderLine::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 

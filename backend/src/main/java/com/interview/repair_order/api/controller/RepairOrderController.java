@@ -94,7 +94,7 @@ public class RepairOrderController {
             @ApiResponse(responseCode = "404", description = "Repair Order not found",
                     content = @Content(schema = @Schema(implementation = CustomError.class)))})
     @DeleteMapping(BASE_V0 + "/{id}")
-    public ResponseEntity<Void> updateRepairOrder(
+    public ResponseEntity<Void> deleteRepairOrder(
             @Parameter(description = "ID of the repair order. Cannot be empty.", required = true) @PathVariable String id) {
         repairOrderService.deleteRepairOrder(id);
 

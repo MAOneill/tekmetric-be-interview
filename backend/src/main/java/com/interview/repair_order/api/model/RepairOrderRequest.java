@@ -30,10 +30,10 @@ public class RepairOrderRequest {
     @Schema(description = "The status of the repair order")
     public Status status;
 
-    @Schema(description = "The odometer reading upon intake")
+    @Schema(description = "The odometer reading upon intake.  If provided, must be less than or equal to odometerOut")
     public Integer odometerIn;
 
-    @Schema(description = "The odometer reading at service end")
+    @Schema(description = "The odometer reading at service end.  If provided, must be greater than or equal to odometerIn")
     public Integer odometerOut;
 
     @Schema(description = "Any notes to describe the issue.")
