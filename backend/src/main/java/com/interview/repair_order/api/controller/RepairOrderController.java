@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +24,7 @@ import java.net.URI;
 
 @RestController
 @AllArgsConstructor
+@SecurityRequirement(name = "apiKeyAuth")
 @ApiResponses(value = {
         @ApiResponse(responseCode = "401", description = "Unauthorized",
                 content = @Content(schema = @Schema(implementation = CustomError.class))),

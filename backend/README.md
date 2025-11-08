@@ -1,6 +1,24 @@
-#Swagger: http://localhost:8080/swagger-ui/index.html
-//include postman json
-//X-AUTH-KEY is required in api calls in the Header with a value of "super-secret-demo-key"
+# This branch is running Java 11.  It and Maven are prerequisites.
+
+### Build and run this app with the following, or from your IDE
+- `mvn package && java -jar target/interview-1.0-SNAPSHOT.jar`
+
+### To run tests - both unit and component
+- `mvn test`
+
+### To see all endpoints, view the swagger page at:
+- Swagger: http://localhost:8080/swagger-ui/index.html
+- Note: a header valjue of 'X-AUTH-KEY' is required for all api/v0/** endpoints.
+- The correct value is "super-secret-demo-key" - enter this in the 'Authorize' button on the swagger page. or 
+- There is a postman collection: "tekmetric-BE-interview-project.postman_collection.json" that can be imported
+
+### This app has two main DB tables - repair_orders and repair_order_lines, linked by repair order id.  There are also audit tables for both.
+
+### The main controller allows CRUD operations for repair_orders.
+
+
+
+# ORIGINAL INSTRUCTIONS BELOW
 # Java Spring Boot API Coding Exercise
 
 ## Steps to get started:
