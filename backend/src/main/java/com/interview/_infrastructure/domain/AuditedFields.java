@@ -1,4 +1,4 @@
-package com.interview._infrastructure.config.domain;
+package com.interview._infrastructure.domain;
 
 import lombok.Getter;
 import lombok.Setter;

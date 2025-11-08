@@ -1,6 +1,6 @@
 package com.interview.repair_order.api.controller;
 
-import com.interview._infrastructure.exceptions.CustomError;
+import com.interview._infrastructure.domain.model.CustomError;
 import com.interview.repair_order.api.model.RepairOrderRequest;
 import com.interview.repair_order.api.model.RepairOrderResponse;
 import com.interview.repair_order.service.RepairOrderService;

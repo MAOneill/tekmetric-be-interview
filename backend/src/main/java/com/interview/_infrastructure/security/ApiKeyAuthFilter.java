@@ -1,7 +1,7 @@
 package com.interview._infrastructure.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.interview._infrastructure.exceptions.CustomError;
+import com.interview._infrastructure.domain.model.CustomError;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

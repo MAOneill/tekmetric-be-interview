@@ -1,5 +1,6 @@
 package com.interview._infrastructure.exceptions;
 
+import com.interview._infrastructure.domain.model.CustomError;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

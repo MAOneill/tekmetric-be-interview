@@ -1,6 +1,6 @@
 package com.interview.repair_order_line.domain;
 
-import com.interview._infrastructure.config.domain.AuditedFields;
+import com.interview._infrastructure.domain.AuditedFields;
 import com.interview.repair_order.domain.RepairOrder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

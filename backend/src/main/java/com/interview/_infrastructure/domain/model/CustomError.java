@@ -1,4 +1,4 @@
-package com.interview._infrastructure.exceptions;
+package com.interview._infrastructure.domain.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
