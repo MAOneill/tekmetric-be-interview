@@ -10,13 +10,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface RepairOrderRepository extends JpaRepository<RepairOrder, String> {
 
-//    @Query("Select ro from RepairOrder ro JOIN FETCH ro.repairOrderLines")
-//    List<RepairOrder> findAllWithLines();
-//
-//    @Query(value = "Select ro from RepairOrder ro JOIN FETCH ro.repairOrderLines",
-//            countQuery = "select count(ro) from RepairOrder ro")
-//    Page<RepairOrder> findAllWithLinesPageable2(Pageable pageable);
-
     @EntityGraph(attributePaths = "repairOrderLines")
     @Query("Select ro from RepairOrder ro")
     Page<RepairOrder> findAllWithLinesPageable(Pageable pageable);

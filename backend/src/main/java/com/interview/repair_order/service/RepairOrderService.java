@@ -6,6 +6,7 @@ import com.interview.repair_order.api.model.RepairOrderRequest;
 import com.interview.repair_order.api.model.RepairOrderResponse;
 import com.interview.repair_order.domain.RepairOrder;
 import com.interview.repair_order.repository.RepairOrderRepository;
+import com.interview.repair_order_line.repository.RepairOrderLineRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,13 +20,7 @@ public class RepairOrderService {
 
     private static final String NOT_FOUND = "A repair order with ID: %s cannot be found.";
     private RepairOrderRepository repairOrderRepository;
-
-//    public List<RepairOrderResponse> getAll() {
-//
-//        return repairOrderRepository.findAllWithLines().stream().map(RepairOrderResponse::new)
-//                .collect(Collectors.toList());
-//
-//    }
+    private RepairOrderLineRepository repairOrderLineRepository;
 
     public Page<RepairOrderResponse> getAllPaginated(Pageable pageable) {
 
@@ -77,6 +72,7 @@ public class RepairOrderService {
         RepairOrder repairOrder = repairOrderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND, id)));
 
+        repairOrderLineRepository.deleteAll(repairOrder.getRepairOrderLines());
         repairOrderRepository.delete(repairOrder);
     }
 }
