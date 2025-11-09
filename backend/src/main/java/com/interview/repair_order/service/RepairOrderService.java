@@ -70,6 +70,7 @@ public class RepairOrderService {
         RepairOrder repairOrder = getRepairOrderFromRepo(id);
 
         repairOrderLineRepository.deleteAll(repairOrder.getRepairOrderLines());
+        repairOrder.getRepairOrderLines().clear();
         repairOrderRepository.delete(repairOrder);
     }
 

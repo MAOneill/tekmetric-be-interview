@@ -162,6 +162,7 @@ class RepairOrderServiceTest {
 
         assertDoesNotThrow(() -> repairOrderService.deleteRepairOrder(REPAIR_ORDER_ID));
         verify(repairOrderLineRepository).deleteAll(repairOrderLines);
+        verify(repairOrderLines).clear();
         verify(repairOrderRepository).delete(repairOrder);
     }
 
